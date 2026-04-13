@@ -9,7 +9,6 @@ $reglement = false;
 
 $erreurs = [];
 
-// ✅ Détection POST + récupération + validation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $prenom = $_POST['prenom'] ?? '';
@@ -21,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $reglement = isset($_POST['reglement']);
 
-    // ✅ VALIDATION
-
+    // VALIDATION
     if (empty($prenom)) {
         $erreurs[] = "Le prénom est obligatoire.";
     }
@@ -50,9 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$reglement) {
         $erreurs[] = "Vous devez accepter le règlement.";
     }
-
-    // 🔍 Test temporaire
-
 }
 ?>
 
@@ -66,6 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <h1>Formulaire de candidature</h1>
+
+    <!-- ✅ AFFICHAGE DES ERREURS -->
+    <?php if (!empty($erreurs)) : ?>
+        <ul class="erreurs">
+            <?php foreach ($erreurs as $e) : ?>
+                <li><?php echo $e; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
 
     <form action="candidature.php" method="POST">
 
