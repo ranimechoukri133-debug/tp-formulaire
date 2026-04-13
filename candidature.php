@@ -2,6 +2,7 @@
 $prenom = '';
 $nom = '';
 $email = '';
+$email_confirm = '';
 $age = '';
 $filiere = '';
 $motivation = '';
@@ -14,12 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = $_POST['prenom'] ?? '';
     $nom = $_POST['nom'] ?? '';
     $email = $_POST['email'] ?? '';
+    $email_confirm = $_POST['email_confirm'] ?? '';
     $age = $_POST['age'] ?? '';
     $filiere = $_POST['filiere'] ?? '';
     $motivation = $_POST['motivation'] ?? '';
     $reglement = isset($_POST['reglement']);
-
-    // VALIDATION
 
     if (empty($prenom)) {
         $erreurs[] = "Le prénom est obligatoire.";
@@ -31,6 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreurs[] = "L'adresse email est invalide.";
+    }
+
+    if ($email !== $email_confirm) {
+        $erreurs[] = "Les deux adresses email ne correspondent pas.";
     }
 
     if (!is_numeric($age) || $age < 16 || $age > 30) {
@@ -45,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreurs[] = "La motivation doit contenir au moins 30 caractères.";
     }
 
-    // ✅ BONUS B1
     if (strlen($motivation) > 300) {
         $erreurs[] = "La motivation ne doit pas dépasser 300 caractères.";
     }
@@ -71,16 +74,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <p><strong>Prénom :</strong> <?php echo $prenom; ?></p>
     <p><strong>Nom :</strong> <?php echo $nom; ?></p>
-    <p><strong>Email :</strong> <?php echo $email; ?></p>
+    <p><strong>Adresse email :</strong> <?php echo $email; ?></p>
     <p><strong>Âge :</strong> <?php echo $age; ?></p>
     <p><strong>Filière :</strong> <?php echo $filiere; ?></p>
 
-    <p><strong>Motivation :</strong></p>
+    <p><strong>Lettre de motivation :</strong></p>
     <p><?php echo nl2br($motivation); ?></p>
 
     <p><em>Votre candidature a bien été enregistrée. Nous vous contacterons à l'adresse indiquée.</em></p>
 
-    <a href="candidature.php">Soumettre une nouvelle candidature</a>
+    <p><a href="candidature.php">Soumettre une nouvelle candidature</a></p>
 
 <?php else : ?>
 
@@ -102,6 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <input type="email" name="email" placeholder="Adresse email" value="<?php echo $email; ?>">
 
+        <input type="email" name="email_confirm" placeholder="Confirmez votre email" value="<?php echo $email_confirm; ?>">
+
         <input type="number" name="age" placeholder="Âge" value="<?php echo $age; ?>">
 
         <select name="filiere">
@@ -114,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <textarea name="motivation" rows="6" placeholder="Lettre de motivation"><?php echo $motivation; ?></textarea>
 
-        <!-- ✅ Compteur -->
         <p><?php echo strlen($motivation); ?> / 300 caractères</p>
 
         <label>
